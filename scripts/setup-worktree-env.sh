@@ -17,6 +17,12 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
+# 無論正常或異常離開，都復原終端樣式
+cleanup_terminal() {
+    tput sgr0 2>/dev/null || printf '\033[0m'
+}
+trap cleanup_terminal EXIT INT TERM
+
 # 解析參數
 USE_SHARED_DB=false
 POSTGRES_HOST=db
