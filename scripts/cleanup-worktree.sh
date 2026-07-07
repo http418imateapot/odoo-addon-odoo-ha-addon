@@ -16,9 +16,13 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# 無論正常或異常離開，都復原終端樣式
+# 確保結束腳本時復原終端色彩配置
+# (1) 無論正常或異常離開，都復原終端樣式
+# (2) 用 -t 檢查 stdout 是否為 TTY，避免在 pipe 輸出 reset escape sequence
 cleanup_terminal() {
-    tput sgr0 2>/dev/null || printf '\033[0m'
+    if [ -t 1 ]; then
+        tput sgr0 2>/dev/null || printf '\033[0m'
+    fi
 }
 trap cleanup_terminal EXIT INT TERM
 
